@@ -1,8 +1,6 @@
 """
 Test for the user API.
 """
-from http.client import PAYMENT_REQUIRED
-from venv import create
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -91,7 +89,7 @@ class PublicAPITests(TestCase):
         """Test return error if cretentials invalid."""
         create_user(email='test@example.com', password='goodpass')
 
-        payload = {'email': 'test@example.com','password':'badpass'}
+        payload = {'email': 'test@example.com', 'password': 'badpass'}
         res = self.client.post(TOKEN_URL, payload)
 
         self.assertNotIn('token', res.data)
@@ -99,7 +97,7 @@ class PublicAPITests(TestCase):
 
     def test_create_token_blank_password(self):
         """Test posting a blank password return an error."""
-        payload = {'email': 'test@example.com','password':'badpass'}
+        payload = {'email': 'test@example.com', 'password': 'badpass'}
         res = self.client.post(TOKEN_URL, payload)
 
         self.assertNotIn('token', res.data)
@@ -110,6 +108,7 @@ class PublicAPITests(TestCase):
         res = self.client.get(ME_URL)
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
 
 class PrivateUserApiTests(TestCase):
     """Test API requests that requiere authentication."""

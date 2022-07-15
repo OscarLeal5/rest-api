@@ -1,7 +1,6 @@
 """
 Serializers for the User API View.
 """
-from wsgiref import validate
 from django.contrib.auth import (
     get_user_model,
     authenticate,
@@ -16,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ['email','password','name']
+        fields = ['email', 'password', 'name']
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
     def create(self, validated_data):
@@ -33,6 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
 
         return user
+
 
 class AuthTokenSerializer(serializers.Serializer):
     """Serializer for the user auth token."""
