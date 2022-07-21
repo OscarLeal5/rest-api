@@ -4,6 +4,16 @@ Tests for models.
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
+from core import models
+
+from datetime import date
+
+from random import randint
+
+def create_user(email='user@example.com', password='testpass123'):
+    """Create and return a new user."""
+    return get_user_model().objects.create_user(email, password)
+
 
 class ModelTests(TestCase):
     """Test models."""
@@ -46,3 +56,28 @@ class ModelTests(TestCase):
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    def test_create_customer(self):
+        """Test creating a recipe is successful."""
+        user = get_user_model().objects.create_user(
+            'test@example.com',
+            'testpass123',
+        )
+        customer = models.Customer.objects.create(
+            user=user,
+            name='Sample Customer Name',
+        )
+
+        self.assertEqual(str(customer), customer.name)
+
+    def test_create_contract(self):
+        """Test creating a new contract with a customer is successful."""
+        user = create_user()
+        today = date.today()
+        customer = models.Customer.objects.create(
+            user=user,
+            name='Sample Customer Name',
+        )
+        contract = models.Contract.objects.create(user=user, title='Sample title', initial_date=today, balance=randint(0,1000),customer=customer)
+
+        self.assertEqual(str(contract), contract.title)
